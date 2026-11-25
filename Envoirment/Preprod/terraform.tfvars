@@ -51,6 +51,7 @@ vms = {
     size           = "Standard_B2s_v2"
     admin_username = "adminuser"
     admin_password = "Admin@1234"
+    nsg_name       = "vm1-nsg"
   }
 }
 PostgreSQL = {

@@ -54,3 +54,32 @@ resource "azurerm_linux_virtual_machine" "vms" {
     version   = "latest"
   }
 }
+
+resource "azurerm_network_security_group" "nsg" {
+  depends_on          = [azurerm_linux_virtual_machine.vms]
+  for_each            = var.vms
+  name                = each.value.nsg_name
+  location            = var.location
+  resource_group_name = var.rgs
+
+  security_rule {
+    name                       = "Allow-SSH"
+    priority                   = 100
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "22"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }
+
+}
+
+resource "azurerm_network_interface_security_group_association" "vm_nsg_association" {
+  for_each   = var.vms
+  depends_on = [azurerm_network_security_group.nsg, azurerm_network_interface.nic]
+
+  network_interface_id      = azurerm_network_interface.nic[each.key].id
+  network_security_group_id = azurerm_network_security_group.nsg[each.key].id
+}
