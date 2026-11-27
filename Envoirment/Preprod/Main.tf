@@ -48,3 +48,11 @@ module "App_Service_Plan" {
   location         = var.location
   app_service_plan = var.app_service_plan
 }
+
+module "application_gateway" {
+  depends_on = [module.subnet]
+  source     = "../../Modules/Applicaation_gataway"
+  rgs        = var.rgs
+  location   = var.location
+  App_Gateway = var.App_Gateway
+}

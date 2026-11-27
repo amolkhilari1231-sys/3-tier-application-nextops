@@ -6,3 +6,4 @@ variable "subnets" {}
 variable "vms" {}
 variable "PostgreSQL" {}
 variable "app_service_plan" {}
+variable "App_Gateway" {}

@@ -9,10 +9,6 @@ storage_accounts = {
   }
 }
 
-
-
-
-
 vnets = {
   vnet1 = {
     name          = "Hub_vnet1"
@@ -39,6 +35,11 @@ subnets = {
     name             = "Database_subnet"
     vnet_name        = "Hub_vnet1"
     address_prefixes = ["10.0.50.0/24"]
+  }
+  subnet4 = {
+    name             = "Gateway_subnet"
+    vnet_name        = "Hub_vnet1"
+    address_prefixes = ["10.0.100.0/24"]
   }
 }
 
@@ -79,5 +80,15 @@ app_service_plan = {
     name        = "nextopsappserviceplan"
     sku_name    = "P1mv4"
     webapp_name = "nextopswebapp"
+  }
+}
+
+App_Gateway = {
+  appgw1 = {
+    Subnet_name          = "Gateway_subnet"
+    vnet_name            = "Hub_vnet1"
+    pip_name              = "nextopsappgw-pip"
+    appgw_name            = "nextopsappgw"
+
   }
 }

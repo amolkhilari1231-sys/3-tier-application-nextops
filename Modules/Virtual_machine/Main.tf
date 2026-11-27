@@ -37,6 +37,7 @@ resource "azurerm_linux_virtual_machine" "vms" {
   admin_username      = each.value.admin_username
   admin_password      = each.value.admin_password
   disable_password_authentication = false
+  custom_data          = filebase64("${path.module}/nextops-nginx-cloud-init.yaml")
   network_interface_ids = [
     azurerm_network_interface.nic[each.key].id,
   ]
@@ -73,7 +74,17 @@ resource "azurerm_network_security_group" "nsg" {
     source_address_prefix      = "*"
     destination_address_prefix = "*"
   }
-
+  security_rule {
+    name                       = "Allow-AppGateway-HTTP"
+    priority                   = 200
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "80"
+    source_address_prefix      = "VirtualNetwork"
+    destination_address_prefix = "*"
+  }
 }
 
 resource "azurerm_network_interface_security_group_association" "vm_nsg_association" {
