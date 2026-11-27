@@ -85,10 +85,10 @@ app_service_plan = {
 
 App_Gateway = {
   appgw1 = {
-    Subnet_name          = "Gateway_subnet"
-    vnet_name            = "Hub_vnet1"
-    pip_name              = "nextopsappgw-pip"
-    appgw_name            = "nextopsappgw"
+    Subnet_name = "Gateway_subnet"
+    vnet_name   = "Hub_vnet1"
+    pip_name    = "nextopsappgw-pip"
+    appgw_name  = "nextopsappgw"
 
   }
 }

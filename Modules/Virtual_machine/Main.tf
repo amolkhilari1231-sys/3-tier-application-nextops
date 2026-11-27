@@ -1,12 +1,12 @@
 data "azurerm_subnet" "subnet" {
-    for_each = var.vms
-    name                 = each.value.subnet_name
-    virtual_network_name = each.value.vnet_name
-    resource_group_name  = var.rgs
-  
+  for_each             = var.vms
+  name                 = each.value.subnet_name
+  virtual_network_name = each.value.vnet_name
+  resource_group_name  = var.rgs
+
 }
 resource "azurerm_public_ip" "public_ip" {
-    for_each = var.vms
+  for_each            = var.vms
   name                = "backendvm-public-ip"
   location            = var.location
   resource_group_name = var.rgs
@@ -15,7 +15,7 @@ resource "azurerm_public_ip" "public_ip" {
 }
 
 resource "azurerm_network_interface" "nic" {
-    for_each = var.vms
+  for_each            = var.vms
   name                = each.value.nic_name
   location            = var.location
   resource_group_name = var.rgs
@@ -29,20 +29,20 @@ resource "azurerm_network_interface" "nic" {
 }
 
 resource "azurerm_linux_virtual_machine" "vms" {
-    for_each = var.vms
-  name                = each.value.vm_name
-  resource_group_name = var.rgs
-  location            = var.location
-  size                = each.value.size
-  admin_username      = each.value.admin_username
-  admin_password      = each.value.admin_password
+  for_each                        = var.vms
+  name                            = each.value.vm_name
+  resource_group_name             = var.rgs
+  location                        = var.location
+  size                            = each.value.size
+  admin_username                  = each.value.admin_username
+  admin_password                  = each.value.admin_password
   disable_password_authentication = false
-  custom_data          = filebase64("${path.module}/nextops-nginx-cloud-init.yaml")
+  custom_data                     = filebase64("${path.module}/nextops-nginx-cloud-init.yaml")
   network_interface_ids = [
     azurerm_network_interface.nic[each.key].id,
   ]
 
-  
+
   os_disk {
     caching              = "ReadWrite"
     storage_account_type = "Standard_LRS"

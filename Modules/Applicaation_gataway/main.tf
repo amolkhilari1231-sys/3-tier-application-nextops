@@ -1,7 +1,7 @@
 
 # Existing Application Gateway subnet
 data "azurerm_subnet" "appgw_subnet" {
-    for_each = var.App_Gateway
+  for_each             = var.App_Gateway
   name                 = each.value.Subnet_name
   virtual_network_name = each.value.vnet_name
   resource_group_name  = var.rgs
@@ -9,7 +9,7 @@ data "azurerm_subnet" "appgw_subnet" {
 
 # Public IP for Application Gateway
 resource "azurerm_public_ip" "appgw_pip" {
-    for_each = var.App_Gateway
+  for_each            = var.App_Gateway
   name                = each.value.pip_name
   location            = var.location
   resource_group_name = var.rgs
@@ -17,12 +17,12 @@ resource "azurerm_public_ip" "appgw_pip" {
   allocation_method = "Static"
   sku               = "Standard"
 
-  
+
 }
 
 # Application Gateway
 resource "azurerm_application_gateway" "appgw" {
-    for_each = var.App_Gateway
+  for_each            = var.App_Gateway
   name                = each.value.appgw_name
   resource_group_name = var.rgs
   location            = var.location

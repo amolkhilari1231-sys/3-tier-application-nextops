@@ -1,23 +1,23 @@
 data "azurerm_virtual_network" "vnet" {
-    for_each = var.PostgreSQL
+  for_each            = var.PostgreSQL
   name                = each.value.vnet_name
   resource_group_name = var.rgs
 }
 
 data "azurerm_subnet" "subnet" {
-    for_each = var.PostgreSQL
+  for_each             = var.PostgreSQL
   name                 = each.value.posrgresql_subnet_name
   virtual_network_name = each.value.vnet_name
   resource_group_name  = var.rgs
 }
 resource "azurerm_private_dns_zone" "dns_zone" {
-    for_each = var.PostgreSQL
+  for_each            = var.PostgreSQL
   name                = each.value.dns_zone_name
   resource_group_name = var.rgs
 }
 
 resource "azurerm_private_dns_zone_virtual_network_link" "Private_DNS_link" {
-    for_each = var.PostgreSQL
+  for_each            = var.PostgreSQL
   name                = each.value.private_DNS_link_name
   private_dns_zone_id = azurerm_private_dns_zone.dns_zone[each.key].id
   virtual_network_id  = data.azurerm_virtual_network.vnet[each.key].id
@@ -25,13 +25,13 @@ resource "azurerm_private_dns_zone_virtual_network_link" "Private_DNS_link" {
 }
 
 resource "azurerm_postgresql_flexible_server" "PostgreSQL" {
-    for_each = var.PostgreSQL
-  name                          = each.value.postgreSQL_server_name
-  resource_group_name           = var.rgs
-  location                      = var.location
-  version                       = "12"
-#   delegated_subnet_id           = data.azurerm_subnet.subnet[each.key].id
-#   private_dns_zone_id           = azurerm_private_dns_zone.dns_zone[each.key].id
+  for_each            = var.PostgreSQL
+  name                = each.value.postgreSQL_server_name
+  resource_group_name = var.rgs
+  location            = var.location
+  version             = "12"
+  #   delegated_subnet_id           = data.azurerm_subnet.subnet[each.key].id
+  #   private_dns_zone_id           = azurerm_private_dns_zone.dns_zone[each.key].id
   public_network_access_enabled = true
   administrator_login           = each.value.administrator_login
   administrator_password        = each.value.administrator_password
@@ -40,8 +40,8 @@ resource "azurerm_postgresql_flexible_server" "PostgreSQL" {
   storage_mb   = each.value.storage_mb
   storage_tier = each.value.storage_tier
 
-  sku_name   = each.value.sku_name
-#   depends_on = [azurerm_private_dns_zone_virtual_network_link.Private_DNS_link]
+  sku_name = each.value.sku_name
+  #   depends_on = [azurerm_private_dns_zone_virtual_network_link.Private_DNS_link]
 }
 
 # PostgreSQL Database Creation
@@ -54,7 +54,7 @@ resource "azurerm_postgresql_flexible_server_database" "database" {
     if try(value.database_name, "") != ""
   }
 
-  name      = each.value.database_name
+  name = each.value.database_name
 
   server_id = azurerm_postgresql_flexible_server.PostgreSQL[each.key].id
 
@@ -73,7 +73,7 @@ resource "azurerm_postgresql_flexible_server_firewall_rule" "laptop" {
   end_ip_address   = "223.233.82.228"
 }
 resource "azurerm_postgresql_flexible_server_configuration" "extensions" {
-  for_each = var.PostgreSQL
+  for_each  = var.PostgreSQL
   name      = each.value.extensions_name
   server_id = azurerm_postgresql_flexible_server.PostgreSQL[each.key].id
 

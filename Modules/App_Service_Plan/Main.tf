@@ -1,5 +1,5 @@
 resource "azurerm_service_plan" "App_Service_Plan" {
-    for_each = var.app_service_plan
+  for_each            = var.app_service_plan
   name                = each.value.name
   resource_group_name = var.rgs
   location            = var.location
@@ -8,8 +8,8 @@ resource "azurerm_service_plan" "App_Service_Plan" {
 }
 
 resource "azurerm_linux_web_app" "webapp" {
-  depends_on = [azurerm_service_plan.App_Service_Plan]
-  for_each = var.app_service_plan
+  depends_on          = [azurerm_service_plan.App_Service_Plan]
+  for_each            = var.app_service_plan
   name                = each.value.webapp_name
   location            = var.location
   resource_group_name = var.rgs
